@@ -44,5 +44,6 @@ app.controller('payController' ,function($scope ,$location,payService){
 	$scope.getMoney=function(){
 		return $location.search()['money'];
 	}
-	
+
+
 });

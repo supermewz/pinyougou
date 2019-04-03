@@ -1,6 +1,5 @@
 package cn.itcast.core.controller;
 
-
 import cn.itcast.core.pojo.seller.Seller;
 import cn.itcast.core.service.SellerService;
 import com.alibaba.dubbo.config.annotation.Reference;
@@ -9,13 +8,17 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * 商家的管理
+ */
+@SuppressWarnings("all")
 @RestController
 @RequestMapping("/seller")
 public class SellerController {
 
     @Reference
     private SellerService sellerService;
-
+    //添加
     @RequestMapping("/add")
     public Result add(@RequestBody Seller seller){
         try {
@@ -26,7 +29,4 @@ public class SellerController {
             return new Result(false,"失败");
         }
     }
-
-
-
 }

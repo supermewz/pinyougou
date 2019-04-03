@@ -26,14 +26,18 @@ app.controller('goodsController' ,function($scope,$controller,$location,typeTemp
 	$scope.findOne=function(){	
 		var id = $location.search()['id'];
 		if(null == id){
+			//点击新增商品过来的 不应该回显
 			return;
 		}
-		goodsService.findOne(id).success(
+		//点击修改按钮 过来的 应该回显
+		goodsService.findOne(id).success(// 通过商品ID 查询 商品包装对象（商品对象 商品详情对象 库存结果集对象）
 			function(response){
-				$scope.entity= response;	
-				
+				$scope.entity= response;	//保存商品时 $scope.entity 提交
+
 				// 调用处理富文本编辑器：
 				editor.html($scope.entity.goodsDesc.introduction);
+
+
 				
 				// 处理图片列表，因为图片信息保存的是JSON的字符串，让前台识别为JSON格式对象
 				$scope.entity.goodsDesc.itemImages = JSON.parse( $scope.entity.goodsDesc.itemImages );
@@ -70,6 +74,8 @@ app.controller('goodsController' ,function($scope,$controller,$location,typeTemp
 	$scope.save=function(){	
 		// 再添加之前，获得富文本编辑器中的内容。
 		$scope.entity.goodsDesc.introduction=editor.html();
+
+
 		var serviceObject;//服务层对象  				
 		if($scope.entity.goods.id!=null){//如果有ID
 			serviceObject=goodsService.update( $scope.entity ); //修改  
@@ -121,8 +127,8 @@ app.controller('goodsController' ,function($scope,$controller,$location,typeTemp
 		// 调用uploadService的方法完成文件的上传
 		uploadService.uploadFile().success(function(response){
 			if(response.flag){
-				// 获得url
-				$scope.image_entity.url =  response.message;
+				// 获得url   <img src="{{image_entity.url}}" -->再次发出请求直接获取图片本身
+				$scope.image_entity.url =  response.message;//http://...
 			}else{
 				alert(response.message);
 			}
@@ -142,9 +148,12 @@ app.controller('goodsController' ,function($scope,$controller,$location,typeTemp
 	
 	// 查询一级分类列表:
 	$scope.selectItemCat1List = function(){
-		itemCatService.findByParentId(0).success(function(response){
-			$scope.itemCat1List = response;
+		//商品分类服务层  查询所有商品分类（父ID为0）
+		itemCatService.findByParentId(0).success(function(response){//List<ItemCat>
+			$scope.itemCat1List = response;//List<ItemCat>
 		});
+
+
 	}
 	
 	// 查询二级分类列表:
@@ -163,10 +172,12 @@ app.controller('goodsController' ,function($scope,$controller,$location,typeTemp
 	
 	// 查询模块ID
 	$scope.$watch("entity.goods.category3Id",function(newValue,oldValue){
-		itemCatService.findOne(newValue).success(function(response){
+		itemCatService.findOne(newValue).success(function(response){//itemCat对象
 			$scope.entity.goods.typeTemplateId = response.typeId;
 		});
 	});
+	//{{entity.goods.typeTemplateId}}
+	//$scope.entity = {goods:{catoryId1:11,typeTemplateId:typeId},goodsDesc:.......
 	
 	// 查询模板下的品牌列表:
 	$scope.$watch("entity.goods.typeTemplateId",function(newValue,oldValue){
@@ -183,7 +194,7 @@ app.controller('goodsController' ,function($scope,$controller,$location,typeTemp
 			
 		});
 		
-		// 根据模板ID获得规格的列表的数据：
+		// 根据模板ID获得规格的列表的数据： 模板ID  List<Map> java
 		typeTemplateService.findBySpecList(newValue).success(function(response){
 			$scope.specList = response;
 		});
@@ -246,13 +257,16 @@ app.controller('goodsController' ,function($scope,$controller,$location,typeTemp
 	// 显示状态
 	$scope.status = ["未审核","审核通过","审核未通过","关闭"];
 	
-	$scope.itemCatList = [];
+	///$scope.itemCatList = [null,图书、音像、电子书刊,电子书刊,.......   戒指];//1000+
+	      //                 0          1             2  ....         1004
+    $scope.itemCatList = [];
 	// 显示分类:
-	$scope.findItemCatList = function(){
-		itemCatService.findAll().success(function(response){
-			for(var i=0;i<response.length;i++){
-				$scope.itemCatList[response[i].id] = response[i].name;
-			}
-		});
-	}
+    $scope.findItemCatList = function(){
+        itemCatService.findAll().success(function(response){//List<ItemCat>
+            for(var i=0;i<response.length;i++){
+
+                $scope.itemCatList[response[i].id] = response[i].name;
+            }
+        });
+    }
 });	

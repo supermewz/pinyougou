@@ -2,6 +2,7 @@ package cn.itcast.core.service;
 
 import cn.itcast.common.utils.HttpClient;
 import cn.itcast.common.utils.IdWorker;
+import cn.itcast.core.dao.log.PayLogDao;
 import cn.itcast.core.pojo.log.PayLog;
 import com.alibaba.dubbo.config.annotation.Service;
 import com.github.wxpay.sdk.WXPayUtil;
@@ -20,6 +21,8 @@ import java.util.Map;
 public class PayServiceImpl implements PayService {
     @Autowired
     private RedisTemplate redisTemplate;
+    @Autowired
+    private PayLogDao payLogDao;
 
     @Value("${appid}")
     private String appid;
@@ -116,4 +119,7 @@ public class PayServiceImpl implements PayService {
         }
         return null;
     }
+
+
+
 }

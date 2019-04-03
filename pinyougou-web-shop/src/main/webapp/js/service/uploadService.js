@@ -1,5 +1,6 @@
 app.service("uploadService",function($http){
-	
+
+	//上传图片
 	this.uploadFile = function(){
 		// 向后台传递数据:
 		var formData = new FormData();
@@ -10,7 +11,7 @@ app.service("uploadService",function($http){
 			method:'post',
 			url:'../upload/uploadFile.do',
 			data:formData,
-			headers:{'Content-Type':undefined} ,// Content-Type : text/html  text/plain
+			headers:{'Content-Type':undefined} ,// Content-Type : text/html  text/plain multipart/form-data
 			transformRequest: angular.identity
 		});
 	}

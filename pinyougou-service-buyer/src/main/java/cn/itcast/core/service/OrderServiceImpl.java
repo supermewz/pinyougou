@@ -49,7 +49,7 @@ public class OrderServiceImpl implements OrderService {
             
             
             // 状态：1、未付款，2、已付款，3、未发货，4、已发货，5、交易成功，6、交易关闭,7、待评价
-            order.setPostFee("1");
+            order.setStatus("1");
 
             //  订单创建时间
             order.setCreateTime(new Date());
